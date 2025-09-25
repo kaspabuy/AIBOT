@@ -18,13 +18,6 @@ API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/g
 # 自定义CSS样式
 st.markdown("""
 <style>
-    .st-emotion-cache-zy6yx3 {
-        width: 100%;
-        padding: 0 1rem 10rem;
-        max-width: initial;
-        min-width: auto;
-    }
-    
     /* 全局样式重置 */
     .main .block-container {
         padding: 1rem 2rem;
@@ -36,6 +29,36 @@ st.markdown("""
         max-width: 1400px;
         margin: 0 auto;
         padding: 0;
+        position: relative;
+    }
+    
+    /* 返回主页按钮 */
+    .home-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        transition: all 0.3s ease;
+        font-size: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .home-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 25px rgba(79, 70, 229, 0.4);
+        background: linear-gradient(135deg, #4338ca, #6d28d9);
+        color: white;
+        text-decoration: none;
     }
     
     /* 主标题样式 */
@@ -138,6 +161,14 @@ st.markdown("""
         body {
             padding-bottom: 120px;
         }
+        
+        .home-button {
+            width: 45px;
+            height: 45px;
+            font-size: 18px;
+            top: 15px;
+            left: 15px;
+        }
     }
     
     /* 消息气泡样式 */
@@ -147,6 +178,7 @@ st.markdown("""
         padding: 1rem 1.5rem;
         border-radius: 25px 25px 8px 25px;
         margin: 1rem 0 1rem auto;
+        max-width: 75%;
         word-wrap: break-word;
         box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
         font-size: 1rem;
@@ -161,6 +193,7 @@ st.markdown("""
         padding: 1rem 1.5rem;
         border-radius: 25px 25px 25px 8px;
         margin: 1rem auto 1rem 0;
+        max-width: 75%;
         word-wrap: break-word;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         border: 1px solid rgba(148, 163, 184, 0.2);
@@ -340,6 +373,13 @@ st.markdown("""
 
 # 主容器
 with st.container():
+    # 返回主页按钮
+    st.markdown("""
+    <a href="https://hapince.site" class="home-button" title="返回Hapince主页">
+        🏠
+    </a>
+    """, unsafe_allow_html=True)
+    
     st.markdown('<div class="chat-app-container">', unsafe_allow_html=True)
     
     # 主标题
