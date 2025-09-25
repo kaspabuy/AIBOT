@@ -4,7 +4,7 @@ import json
 
 # 页面配置
 st.set_page_config(
-    page_title="千问AI助手",
+    page_title="Hapince出海AI助手",
     page_icon="🤖",
     layout="centered"
 )
