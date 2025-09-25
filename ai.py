@@ -154,7 +154,6 @@ st.markdown("""
         padding: 1rem 1.5rem;
         border-radius: 25px 25px 25px 8px;
         margin: 1rem auto 1rem 0;
-        max-width: 75%;
         word-wrap: break-word;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         border: 1px solid rgba(148, 163, 184, 0.2);
