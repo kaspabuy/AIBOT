@@ -78,6 +78,7 @@ st.markdown("""
         box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
         position: relative;
         overflow: hidden;
+        margin: 0 5rem;
     }
     
     .main-header::before {
