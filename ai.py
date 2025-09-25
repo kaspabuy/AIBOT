@@ -4,7 +4,7 @@ import json
 
 # 页面配置
 st.set_page_config(
-    page_title="从洲洲的AI助手",
+    page_title="千问AI助手",
     page_icon="🤖",
     layout="centered"
 )
@@ -105,14 +105,38 @@ st.markdown("""
 # 主标题
 st.markdown("""
 <div class="main-header">
-    <h1>🤖 从洲洲的AI助手</h1>
-    <p>您的智能对话伙伴</p>
+    <h1>🌍 Hapince - 企业出海专家</h1>
+    <p>专业的企业出海服务解决方案</p>
 </div>
 """, unsafe_allow_html=True)
 
 # 初始化会话状态
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+# 系统提示词设置
+SYSTEM_PROMPT = """你的名字是Hapince，你是一名专业的企业出海服务专家。
+
+你的专业领域包括：
+- 海外市场分析与拓展策略
+- 跨境贸易与合规指导
+- 国际业务流程优化
+- 海外投资与并购咨询
+- 跨文化商务沟通
+- 国际税务与法律法规
+- 数字化出海解决方案
+- 供应链全球化管理
+
+请遵循以下原则为企业提供专业的出海服务：
+1. 提供准确、实用的出海建议和解决方案
+2. 结合具体案例和市场数据支持观点
+3. 考虑不同国家和地区的法规差异
+4. 保持专业、友善的咨询顾问语调
+5. 针对企业实际情况提供定制化建议
+6. 适当使用专业术语但确保客户理解
+7. 主动询问企业具体需求以提供精准服务
+
+作为Hapince，你致力于帮助中国企业成功走向国际市场，实现全球化发展目标。"""
 
 # API调用函数
 def call_qianwen_api(messages):
@@ -122,10 +146,13 @@ def call_qianwen_api(messages):
         "Content-Type": "application/json"
     }
     
+    # 在消息前添加系统提示
+    system_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
+    
     data = {
         "model": MODEL_NAME,
         "input": {
-            "messages": messages
+            "messages": system_messages
         },
         "parameters": {
             "temperature": 0.7,
@@ -157,7 +184,7 @@ if st.session_state.messages:
         else:
             st.markdown(f"""
                 <div class="ai-message">
-                    🤖 {message["content"]}
+                    🌍 <strong>Hapince:</strong> {message["content"]}
                 </div>
             """, unsafe_allow_html=True)
     
@@ -166,9 +193,17 @@ else:
     # 显示欢迎信息
     st.markdown("""
     <div style="text-align: center; padding: 3rem; color: #666;">
-        <h3>👋 欢迎使用从洲洲的AI助手！</h3>
-        <p>我是您的智能对话伙伴，可以帮您解答问题、提供建议、进行创意讨论等。</p>
-        <p style="margin-top: 2rem;">💭 <em>请在下方输入框中输入您想问的问题...</em></p>
+        <h3>👋 您好！我是Hapince</h3>
+        <p>我是一名专业的企业出海服务专家，拥有丰富的国际化业务经验。</p>
+        <p style="margin: 1.5rem 0;">我可以为您的企业提供：</p>
+        <div style="text-align: left; max-width: 500px; margin: 0 auto;">
+            <p>🌐 <strong>海外市场分析</strong> - 目标市场调研与进入策略</p>
+            <p>📋 <strong>合规指导</strong> - 国际法规与税务咨询</p>
+            <p>🤝 <strong>商务拓展</strong> - 跨文化沟通与合作伙伴对接</p>
+            <p>💼 <strong>投资咨询</strong> - 海外投资与并购建议</p>
+            <p>🔗 <strong>供应链优化</strong> - 全球化运营管理</p>
+        </div>
+        <p style="margin-top: 2rem;">💭 <em>请告诉我您企业出海的具体需求，我将为您提供专业的解决方案...</em></p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -182,7 +217,7 @@ with st.form(key="chat_form", clear_on_submit=True):
         user_input = st.text_area(
             "",
             height=80,
-            placeholder="请输入您的问题...",
+            placeholder="请输入您的企业出海相关问题...",
             key="user_input_text",
             label_visibility="collapsed"
         )
@@ -202,7 +237,7 @@ if send_button and user_input and user_input.strip():
     })
     
     # 显示思考状态
-    with st.spinner("🤖 AI正在思考中..."):
+    with st.spinner("🌍 Hapince正在为您分析企业出海方案..."):
         # 调用API
         response = call_qianwen_api(st.session_state.messages)
         
@@ -233,6 +268,6 @@ if st.session_state.messages:
 # 页面底部信息
 st.markdown("""
 <div style="text-align: center; color: #999; padding: 2rem 0; font-size: 14px;">
-    <p>基于阿里通义千问 • Powered by Hapince</p>
+    <p>🌍 Hapince - 专业企业出海服务 • Powered by 阿里通义千问</p>
 </div>
 """, unsafe_allow_html=True)
