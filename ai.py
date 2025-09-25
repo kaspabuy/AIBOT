@@ -53,7 +53,6 @@ st.markdown("""
         padding: 12px 16px;
         border-radius: 18px 18px 18px 5px;
         margin: 8px auto 8px 0;
-        max-width: 80%;
         word-wrap: break-word;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         border: 1px solid #e9ecef;
