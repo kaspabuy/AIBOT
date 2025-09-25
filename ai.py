@@ -140,7 +140,6 @@ st.markdown("""
         padding: 1rem 1.5rem;
         border-radius: 25px 25px 8px 25px;
         margin: 1rem 0 1rem auto;
-        max-width: 75%;
         word-wrap: break-word;
         box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
         font-size: 1rem;
