@@ -18,6 +18,13 @@ API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/g
 # 自定义CSS样式
 st.markdown("""
 <style>
+    .st-emotion-cache-zy6yx3 {
+        width: 100%;
+        padding: 0 1rem 10rem;
+        max-width: initial;
+        min-width: auto;
+    }
+    
     /* 全局样式重置 */
     .main .block-container {
         padding: 1rem 2rem;
