@@ -229,22 +229,24 @@ with chat_container:
 # 用户输入区域
 st.subheader("✍️ 发送消息")
 
-user_input = st.text_area(
-    "请输入您的问题:",
-    height=100,
-    placeholder="请输入您想要咨询的问题...",
-    key="user_input"
-)
-
-# 发送按钮
-col1, col2 = st.columns([1, 4])
-
-with col1:
-    send_button = st.button("🚀 发送", type="primary")
-
-with col2:
-    if not api_key:
-        st.warning("⚠️ 请先在侧边栏输入API密钥")
+# 使用form来处理输入，避免session state冲突
+with st.form(key="chat_form", clear_on_submit=True):
+    user_input = st.text_area(
+        "请输入您的问题:",
+        height=100,
+        placeholder="请输入您想要咨询的问题...",
+        key="user_input_text"
+    )
+    
+    # 发送按钮
+    col1, col2 = st.columns([1, 4])
+    
+    with col1:
+        send_button = st.form_submit_button("🚀 发送", type="primary")
+    
+    with col2:
+        if not api_key:
+            st.warning("⚠️ 请先在侧边栏输入API密钥")
 
 # 处理发送逻辑
 if send_button and user_input.strip():
@@ -283,9 +285,6 @@ if send_button and user_input.strip():
                 usage = response.get("usage", {})
                 if usage:
                     st.session_state.total_tokens += usage.get("total_tokens", 0)
-                
-                # 清空输入框
-                st.session_state.user_input = ""
                 
                 # 重新运行以显示新消息
                 st.rerun()
