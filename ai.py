@@ -4,7 +4,7 @@ import json
 
 # 页面配置
 st.set_page_config(
-    page_title="千问AI助手",
+    page_title="从洲洲的AI助手",
     page_icon="🤖",
     layout="centered"
 )
@@ -105,7 +105,7 @@ st.markdown("""
 # 主标题
 st.markdown("""
 <div class="main-header">
-    <h1>🤖 千问AI助手</h1>
+    <h1>🤖 从洲洲的AI助手</h1>
     <p>您的智能对话伙伴</p>
 </div>
 """, unsafe_allow_html=True)
@@ -166,7 +166,7 @@ else:
     # 显示欢迎信息
     st.markdown("""
     <div style="text-align: center; padding: 3rem; color: #666;">
-        <h3>👋 欢迎使用千问AI助手！</h3>
+        <h3>👋 欢迎使用从洲洲的AI助手！</h3>
         <p>我是您的智能对话伙伴，可以帮您解答问题、提供建议、进行创意讨论等。</p>
         <p style="margin-top: 2rem;">💭 <em>请在下方输入框中输入您想问的问题...</em></p>
     </div>
@@ -233,6 +233,6 @@ if st.session_state.messages:
 # 页面底部信息
 st.markdown("""
 <div style="text-align: center; color: #999; padding: 2rem 0; font-size: 14px;">
-    <p>基于阿里通义千问 • Powered by Streamlit</p>
+    <p>基于阿里通义千问 • Powered by Hapince</p>
 </div>
 """, unsafe_allow_html=True)
