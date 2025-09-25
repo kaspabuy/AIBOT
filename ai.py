@@ -105,7 +105,7 @@ st.markdown("""
 # 主标题
 st.markdown("""
 <div class="main-header">
-    <h1>🌍 Hapince - 企业出海专家</h1>
+    <h1>🌍 Hapince - 企业出海专家级AI助手</h1>
     <p>专业的企业出海服务解决方案</p>
 </div>
 """, unsafe_allow_html=True)
