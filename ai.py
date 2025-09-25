@@ -4,9 +4,10 @@ import json
 
 # 页面配置
 st.set_page_config(
-    page_title="Hapince出海AI助手",
-    page_icon="🤖",
-    layout="centered"
+    page_title="Hapince - 企业出海专家",
+    page_icon="🌍",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # API配置
@@ -17,97 +18,332 @@ API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/g
 # 自定义CSS样式
 st.markdown("""
 <style>
+    /* 全局样式重置 */
+    .main .block-container {
+        padding: 1rem 2rem;
+        max-width: none;
+    }
+    
+    /* 响应式容器 */
+    .chat-app-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+    
+    /* 主标题样式 */
     .main-header {
         text-align: center;
-        padding: 1.5rem 0;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        padding: 2.5rem 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        border-radius: 15px;
+        border-radius: 20px;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
     }
     
+    .main-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    
+    .main-header h1 {
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .main-header p {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* 聊天容器样式 */
     .chat-container {
-        max-height: 500px;
-        overflow-y: auto;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 15px;
-        margin-bottom: 1rem;
+        background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        border: 1px solid rgba(255,255,255,0.8);
     }
     
+    /* PC端聊天区域 */
+    @media (min-width: 768px) {
+        .chat-messages {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .chat-input-section {
+            position: sticky;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+    }
+    
+    /* 移动端适配 */
+    @media (max-width: 767px) {
+        .main .block-container {
+            padding: 0.5rem 1rem;
+        }
+        
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .chat-input-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+            z-index: 999;
+        }
+        
+        .main-header {
+            margin-bottom: 1rem;
+            padding: 1.5rem 1rem;
+        }
+        
+        body {
+            padding-bottom: 120px;
+        }
+    }
+    
+    /* 消息气泡样式 */
     .user-message {
-        background: linear-gradient(135deg, #007bff, #0056b3);
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
         color: white;
-        padding: 12px 16px;
-        border-radius: 18px 18px 5px 18px;
-        margin: 8px 0 8px auto;
-        max-width: 80%;
+        padding: 1rem 1.5rem;
+        border-radius: 25px 25px 8px 25px;
+        margin: 1rem 0 1rem auto;
+        max-width: 75%;
         word-wrap: break-word;
-        box-shadow: 0 2px 10px rgba(0,123,255,0.3);
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        font-size: 1rem;
+        line-height: 1.5;
+        position: relative;
+        animation: slideInRight 0.3s ease-out;
     }
     
     .ai-message {
-        background: white;
-        color: #333;
-        padding: 12px 16px;
-        border-radius: 18px 18px 18px 5px;
-        margin: 8px auto 8px 0;
+        background: linear-gradient(135deg, #ffffff, #f8fafc);
+        color: #1e293b;
+        padding: 1rem 1.5rem;
+        border-radius: 25px 25px 25px 8px;
+        margin: 1rem auto 1rem 0;
+        max-width: 75%;
         word-wrap: break-word;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        border: 1px solid #e9ecef;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        font-size: 1rem;
+        line-height: 1.5;
+        position: relative;
+        animation: slideInLeft 0.3s ease-out;
     }
     
-    .input-container {
-        position: sticky;
-        bottom: 0;
-        background: white;
-        padding: 1rem 0;
-        border-top: 1px solid #e9ecef;
+    /* 动画效果 */
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* 输入区域样式 */
+    .input-row {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+        width: 100%;
+    }
+    
+    .input-area {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .send-button {
+        flex-shrink: 0;
+        width: 120px;
     }
     
     .stTextArea textarea {
-        border-radius: 15px !important;
-        border: 2px solid #dee2e6 !important;
-        padding: 12px 16px !important;
+        border-radius: 20px !important;
+        border: 2px solid #e2e8f0 !important;
+        padding: 1rem 1.5rem !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        resize: none !important;
+        transition: all 0.3s ease !important;
+        background: rgba(255, 255, 255, 0.9) !important;
     }
     
     .stTextArea textarea:focus {
-        border-color: #007bff !important;
-        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25) !important;
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+        background: white !important;
     }
     
+    /* 发送按钮样式 */
     .stButton > button {
         width: 100%;
-        background: linear-gradient(45deg, #007bff, #0056b3);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 0.6rem 2rem;
-        font-weight: bold;
-        font-size: 16px;
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 20px !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3) !important;
+        height: 60px !important;
     }
     
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0,123,255,0.4);
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4) !important;
+        background: linear-gradient(135deg, #4338ca, #6d28d9) !important;
+    }
+    
+    /* 欢迎页面样式 */
+    .welcome-section {
+        background: linear-gradient(135deg, #ffffff, #f8fafc);
+        padding: 3rem 2rem;
+        border-radius: 25px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin: 2rem 0;
+        border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .service-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+        text-align: left;
+    }
+    
+    .service-card {
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+        border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    /* 清除按钮样式 */
+    .clear-button button {
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        color: white !important;
+        border-radius: 15px !important;
+        padding: 0.5rem 1.5rem !important;
+        border: none !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .clear-button button:hover {
+        background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+        transform: translateY(-2px) !important;
+    }
+    
+    /* 滚动条美化 */
+    .chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-track {
+        background: rgba(148, 163, 184, 0.1);
+        border-radius: 4px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #94a3b8, #64748b);
+        border-radius: 4px;
     }
     
     /* 隐藏Streamlit默认元素 */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     .stDeployButton {display:none;}
+    header {visibility: hidden;}
+    
+    /* 响应式字体 */
+    @media (max-width: 480px) {
+        .user-message, .ai-message {
+            max-width: 90%;
+            font-size: 0.9rem;
+            padding: 0.8rem 1.2rem;
+        }
+        
+        .service-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .welcome-section {
+            padding: 2rem 1rem;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# 主标题
-st.markdown("""
-<div class="main-header">
-    <h1>🌍 Hapince - 企业出海专家级AI助手</h1>
-    <p>专业的企业出海服务解决方案</p>
-</div>
-""", unsafe_allow_html=True)
+# 主容器
+with st.container():
+    st.markdown('<div class="chat-app-container">', unsafe_allow_html=True)
+    
+    # 主标题
+    st.markdown("""
+    <div class="main-header">
+        <h1>🌍 Hapince - 企业出海专家</h1>
+        <p>专业的企业出海服务解决方案，助力中国企业走向世界</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # 初始化会话状态
 if "messages" not in st.session_state:
